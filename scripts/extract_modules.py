@@ -12,7 +12,7 @@ TOF_SDK_PATH = Path(__file__).parent.parent / 'ToF' / 'scripts' / 'windows' / 'b
 
 TOF_PYTHON_BINDINGS_PATH = Path(__file__).parent.parent / "ToF" / 'scripts' / 'windows' / 'build' / 'bindings' / 'python' / 'Release'
 
-MODULES_PATH =  Path(__file__).parent.parent / 'modules'
+BINS_PATH =  Path(__file__).parent.parent / 'bin'
 
 LIBS_PATH = Path(__file__).parent.parent / 'libs'
 
@@ -27,10 +27,10 @@ if __name__ == "__main__":
         print("Invalid SDK contents")
 
     for file in os.listdir(TOF_SDK_PATH):
-        shutil.copy2(TOF_SDK_PATH / file, MODULES_PATH / file)
+        shutil.copy2(TOF_SDK_PATH / file, BINS_PATH / file)
 
     for file in os.listdir(TOF_PYTHON_BINDINGS_PATH):
-        shutil.copy2(TOF_PYTHON_BINDINGS_PATH / file, MODULES_PATH / file)
+        shutil.copy2(TOF_PYTHON_BINDINGS_PATH / file, BINS_PATH / file)
 
     for file in os.listdir(LIBS_PATH):
-        shutil.copy2(LIBS_PATH / file, MODULES_PATH / file)
+        shutil.copy2(LIBS_PATH / file, BINS_PATH / file)
