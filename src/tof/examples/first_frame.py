@@ -36,7 +36,13 @@
 #       Ref: https://stackoverflow.com/questions/74112099/importing-matplotlib-causes-int-argument-must-be-a-string-error
 # 3. Placed .json, .ini, and .cfg config files in config directory
 # 4. Changed FrameType from lrqmp to qmp
-
+# 5. For the following error:
+#       I1027 20:15:18.145859 14028 camera_itof.cpp:695] initComputeLibrary
+#       Failed to open data file C:\Users\MTinaco\AppData\Local\Programs\Python\Python39\tofi_processor.obj.
+#       Failed to load the compute engine
+#       Failed to initialize OpenCL config
+#       Failed to initialize TOFI Processor Config
+#   The only work around is to provide the .obj file on the root Python dir. Ongoing investigation
 
 import numpy as np
 import matplotlib.pyplot as plt
