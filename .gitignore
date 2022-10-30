@@ -130,3 +130,6 @@ dmypy.json
 
 # Modules contents
 modules/
+
+# Binaries
+bin/
