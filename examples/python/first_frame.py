@@ -47,6 +47,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 import sys, os
+from pathlib import Path
 
 import matplotlib
 matplotlib.use('tkagg')
@@ -55,31 +56,38 @@ sys.path.append(os.path.join(os.getcwd(), '.'))
 import bin.aditofpython as tof
 
 
-if len(sys.argv) < 2  or sys.argv[1] == "--help" or sys.argv[1] == "-h" :
-    print("first_frame.py usage:")
-    print("USB / Local connection: first_frame.py <config>")
-    print("Network connection: first_frame.py <ip> <config>")
-    exit(1)
+# if len(sys.argv) < 2  or sys.argv[1] == "--help" or sys.argv[1] == "-h" :
+#     print("first_frame.py usage:")
+#     print("USB / Local connection: first_frame.py <config>")
+#     print("Network connection: first_frame.py <ip> <config>")
+#     exit(1)
 
 system = tof.System()
 
-cameras = []
-if len(sys.argv) == 3 :
-    status = system.getCameraListAtIp(cameras,sys.argv[1])
-    config = sys.argv[2]
-elif len(sys.argv) == 2 :
-    status = system.getCameraList(cameras)
-    config = sys.argv[1]
-else :
-    print("Too many arguments provided!")
-    exit(1)
+# cameras = []
+# if len(sys.argv) == 3 :
+#     status = system.getCameraListAtIp(cameras,sys.argv[1])
+#     config = sys.argv[2]
+# elif len(sys.argv) == 2 :
+#     status = system.getCameraList(cameras)
+#     config = sys.argv[1]
+# else :
+#     print("Too many arguments provided!")
+#     exit(1)
 
-print("system.getCameraList()", status)
+config = Path(__file__).parent.parent.parent / 'config' / "tof-viewer_config.json"
+ip = "10.42.0.1"
+
+cameras = []
+status = system.getCameraListAtIp(cameras, ip)
+if not status:
+    print("system.getCameraList() failed with status: ", status)
+
+status = cameras[0].setControl("initialization_config", str(config))
+if not status:
+    print("camera[0].setControl()", status)
 
 camera1 = cameras[0]
-
-status = camera1.setControl("initialization_config", config)
-print("camera1.setControl()", status)
 
 status = camera1.initialize()
 print("camera1.initialize()", status)

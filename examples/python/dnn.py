@@ -57,17 +57,23 @@ class ModesEnum(Enum):
 
 if __name__ == "__main__":
 
-    parser = argparse.ArgumentParser(
-        description='Script to run MobileNet-SSD object detection network ')
-    parser.add_argument("--prototxt", default="MobileNetSSD_deploy.prototxt",
-                        help='Path to text network file: '
-                             'MobileNetSSD_deploy.prototxt')
-    parser.add_argument("--weights", default="MobileNetSSD_deploy.caffemodel",
-                        help='Path to weights: '
-                             'MobileNetSSD_deploy.caffemodel')
-    args = parser.parse_args()
+    # parser = argparse.ArgumentParser(
+    #     description='Script to run MobileNet-SSD object detection network ')
+    # parser.add_argument("--prototxt", default="MobileNetSSD_deploy.prototxt",
+    #                     help='Path to text network file: '
+    #                          'MobileNetSSD_deploy.prototxt')
+    # parser.add_argument("--weights", default="MobileNetSSD_deploy.caffemodel",
+    #                     help='Path to weights: '
+    #                          'MobileNetSSD_deploy.caffemodel')
+    # args = parser.parse_args()
+
+    prototxt = Path(__file__).parent.parent.parent / 'assets' / 'MobileNetSSD_deploy.prototxt'
+    weights = Path(__file__).parent.parent.parent / 'assets' / 'MobileNetSSD_deploy.caffemodel'
+    config = Path(__file__).parent.parent.parent / 'config' / "tof-viewer_config.json"
+    ip = "10.42.0.1"
+
     try:
-        net = cv.dnn.readNetFromCaffe(args.prototxt, args.weights)
+        net = cv.dnn.readNetFromCaffe(str(prototxt), str(weights))
     except:
         print("Error: Please give the correct location of the prototxt and caffemodel")
         sys.exit(1)
@@ -83,15 +89,15 @@ if __name__ == "__main__":
     system = tof.System()
 
     cameras = []
-    status = system.getCameraListAtIp(cameras, "10.42.0.1")
+    status = system.getCameraListAtIp(cameras, ip)
     if not status:
         print("system.getCameraList() failed with status: ", status)
 
-    config = "config/tof-viewer_config.json"
-    status = cameras[0].setControl("initialization_config", config)
-    print("camera1.setControl()", status)
+    status = cameras[0].setControl("initialization_config", str(config))
+    if not status:
+        print("camera[0].setControl()", status)
 
-    status = cameras[0].initialize()
+    status = cameras[0].initialize() 
     if not status:
         print("cameras[0].initialize() failed with status: ", status)
 
@@ -109,7 +115,7 @@ if __name__ == "__main__":
     if not status:
         print("system.getAvailableFrameTypes() failed with status: ", status)
     
-    status = cameras[0].setFrameType(types[1]) # types[2] is 'mp_pcm' type.
+    status = cameras[0].setFrameType(types[0]) # types[2] is 'mp_pcm' type.
     if not status:
         print("cameras[0].setFrameType() failed with status:", status)
     
