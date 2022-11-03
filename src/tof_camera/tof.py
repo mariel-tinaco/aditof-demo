@@ -1,6 +1,11 @@
 
 
 from abc import ABC, abstractmethod
+from enum import Enum
+
+class MapType (Enum):
+    DEPTH = 'depth'
+    IR = 'ir'
 
 class TOFCamera (ABC):
 
@@ -28,6 +33,8 @@ class TOFCameraContext :
     def configure (self, configuration):
         self._camera.configure (configuration)
 
-    def snapshot (self):
+    def snapshot (self, datatype):
         self._camera.start()
-        return self._camera.fetch()
+        image = self._camera.fetch(datatype)
+        self._camera.stop()
+        return image
