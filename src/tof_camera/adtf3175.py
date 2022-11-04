@@ -97,7 +97,6 @@ if __name__ == "__main__":
     import matplotlib.pyplot as plt
     matplotlib.use('tkagg')
 
-
     system = tof.System()
 
     ip = "10.42.0.1"
@@ -108,6 +107,8 @@ if __name__ == "__main__":
         print("system.getCameraList() failed with status: ", status)
 
     tofcam = TOFCameraContext (ADTF3175Camera(cameras[0]))
+
+    print(tofcam.dev_id)
 
     cam_modes = tofcam.camera.modes 
     frame_types = tofcam.camera.frametypes

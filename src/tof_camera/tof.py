@@ -30,6 +30,10 @@ class TOFCameraContext :
     def camera (self):
         return self._camera
 
+    @property
+    def dev_id (self):
+        return self._camera.__class__.__name__
+
     def configure (self, configuration):
         self._camera.configure (configuration)
 
