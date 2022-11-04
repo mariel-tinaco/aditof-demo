@@ -1,0 +1,2 @@
+pyside6-uic C:\Users\MTinaco\Dev\aditof-demo\src\views\resources\ui\StyledMainView.ui -o C:\Users\MTinaco\Dev\aditof-demo\src\views\resources\widgets\Ui_StyledMainView.py
+pyside6-rcc C:\Users\MTinaco\Dev\aditof-demo\src\views\resources\resources.qrc -o C:\Users\MTinaco\Dev\aditof-demo\src\views\resources\widgets\resources_rc.py
