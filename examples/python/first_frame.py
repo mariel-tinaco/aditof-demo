@@ -102,7 +102,7 @@ status = camera1.getDetails(camDetails)
 print("camera1.getDetails()", status)
 print("camera1 details:", "id:", camDetails.cameraId, "connection:", camDetails.connection)
 
-status = camera1.setFrameType("qmp")
+status = camera1.setFrameType("mp")
 print("camera1.setFrameType()", status)
 # print("lrqmp")
 print("qmp")
@@ -121,9 +121,41 @@ print("depth frame details:", "width:", frameDataDetails.width, "height:", frame
 
 image = np.array(frame.getData("depth"), copy=False)
 
-plt.figure()
-plt.imshow(image)
-plt.colorbar()
-plt.show()
+camera1.stop()
+
+
+
+
+
+if __name__ == "__main__":
+    from PySide6 import QtWidgets, QtCore, QtGui
+    import cv2
+
+    class Window (QtWidgets.QWidget):
+
+        def __init__ (self, image):
+            super().__init__()
+
+            layout = QtWidgets.QHBoxLayout()
+            label = QtWidgets.QLabel()
+            grayframe = cv2.cvtColor(image, cv2.COLOR_GRAY2RGB)
+            h, w = image.shape[:2]
+            bytesPerLine = 3*w
+            qimage = QtGui.QImage(grayframe.data, w, h, bytesPerLine, QtGui.QImage.Format.Format_RGB888)
+            qpixmap = QtGui.QPixmap.fromImage(qimage).scaled(h, w)
+
+            label.setPixmap(qpixmap)
+            layout.addWidget(label)
+            self.setLayout(layout)
+
+    app = QtWidgets.QApplication(sys.argv)
+    widget = Window(image)
+    widget.show()
+    sys.exit(app.exec())
+
+# plt.figure()
+# plt.imshow(image)
+# plt.colorbar()
+# plt.show()
 
 

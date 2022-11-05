@@ -3,6 +3,8 @@
 from abc import ABC, abstractmethod
 from enum import Enum
 
+import numpy as np
+
 class MapType (Enum):
     DEPTH = 'depth'
     IR = 'ir'
@@ -19,6 +21,10 @@ class TOFCamera (ABC):
 
     @abstractmethod
     def fetch (self):
+        raise NotImplementedError
+
+    @abstractmethod
+    def request_frame (self):
         raise NotImplementedError
 
 class TOFCameraContext :
@@ -39,6 +45,19 @@ class TOFCameraContext :
 
     def snapshot (self, datatype):
         self._camera.start()
-        image = self._camera.fetch(datatype)
+        status, image = self._camera.fetch(datatype)
+        if status:
+            self._camera.stop()
+            return image
+        else:
+            raise IOError("Unable to fetch frame")
+
+    def read (self):
+        status, frame_object = self._camera.request_frame()
+        return status, frame_object
+
+    def read_bulk (self):
+        self._camera.start()
+        status, frames = self._camera.get_bulk_frame()
         self._camera.stop()
-        return image
+        return status, frames

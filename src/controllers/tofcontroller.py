@@ -1,4 +1,5 @@
 from PySide6 import QtWidgets, QtCore, QtGui
+import numpy as np
 
 from ..tof_camera.adtf3175 import ADTF3175Camera
 from ..tof_camera.tof import TOFCameraContext, TOFCamera
@@ -13,6 +14,7 @@ class ToFController (QtCore.QObject):
         super(ToFController, self).__init__()
 
         self.available_cameras = []
+        self.current_camera = None
 
     def initialize (self):
 
@@ -28,9 +30,12 @@ class ToFController (QtCore.QObject):
 
         # Initialize Azure Kinect
 
+    def configure (self, configuration : dict):
+        self.current_camera.configure(configuration)
 
-
-
+    def capture (self):
+        status, bulk_frames = self.current_camera.read_bulk()
+        return status, bulk_frames
 
 if __name__ == "__main__":
 

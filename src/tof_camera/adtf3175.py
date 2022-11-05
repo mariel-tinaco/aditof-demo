@@ -62,6 +62,22 @@ class ADTF3175Camera (TOFCamera):
     def stop (self):
         self._camera.stop()
 
+    def request_frame (self):
+        status = self._camera.requestFrame(self.frame)
+        if not status:
+            print("cameras[0].requestFrame() failed with status: ", status)
+        return status, self.frame
+
+    def get_bulk_frame (self):
+        status = self._camera.requestFrame(self.frame)
+        if not status:
+            print("cameras[0].requestFrame() failed with status: ", status)
+
+        ir_map = np.array(self.frame.getData('ir'), dtype="uint16", copy=False)
+        depth_map = np.array(self.frame.getData('depth'), dtype="uint16", copy=False)
+        
+        return status, {'ir' : ir_map, 'depth' : depth_map}
+
     def fetch (self, datatype):
         # Capture frame-by-frame
         status = self._camera.requestFrame(self.frame)
@@ -69,7 +85,7 @@ class ADTF3175Camera (TOFCamera):
             print("cameras[0].requestFrame() failed with status: ", status)
 
         map = np.array(self.frame.getData(datatype), dtype="uint16", copy=False)
-        return map
+        return status, map
 
     @property
     def camera (self):
@@ -86,7 +102,7 @@ class ADTF3175Camera (TOFCamera):
     @property
     def frametypes (self) -> list:
         _types = []
-        status = cameras[0].getAvailableFrameTypes(_types)
+        status = self._camera.getAvailableFrameTypes(_types)
         if not status:
             print("system.getAvailableFrameTypes() failed with status: ", status)
         return _types 
