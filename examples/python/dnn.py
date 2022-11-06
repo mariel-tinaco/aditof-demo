@@ -253,3 +253,5 @@ if __name__ == "__main__":
 
         if cv.waitKey(1) >= 0:
             break
+
+    cameras[0].stop()

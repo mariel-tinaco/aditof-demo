@@ -1,10 +1,12 @@
 import sys, os
+import logging
 from PySide6 import QtWidgets, QtCore, QtGui
 
 from ..controllers.maincontroller import MainController
 # from ..views.widgets.tofmainwindow import MainWindow
 from ..views.widgets.styledmainview import MainWindow
 from ..models.mainmodel import MainModel
+
 class TOFDemoApplication (QtCore.QObject):
 
     def __init__ (self, *args, **kwargs):
@@ -15,7 +17,6 @@ class TOFDemoApplication (QtCore.QObject):
     def start (self):
         self.controller.start()
         self.controller.connect_signals()
-
     @property
     def app (self):
         return self.__app

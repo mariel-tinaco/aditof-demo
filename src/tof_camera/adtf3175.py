@@ -2,12 +2,12 @@ import sys, os
 import numpy as np
 from pathlib import Path
 from enum import Enum
-
+from copy import deepcopy
 
 sys.path.append(os.path.join(os.getcwd(), '.'))
 import bin.aditofpython as tof
 
-from .tof import TOFCamera, TOFCameraContext, MapType
+from .tof import TOFCamera, TOFCameraContext, MapType, Frame
 
 CONFIG_PATH = Path(__file__).parent.parent.parent / 'config' / "tof-viewer_config.json"
 
@@ -22,6 +22,10 @@ class ADTF3175Camera (TOFCamera):
         self._camera = camera
         self.frame = None
 
+        self.camDetails = None
+        self.imgWidth = 0
+        self.imgHeight = 0
+
         status = self._camera.setControl("initialization_config", str(CONFIG_PATH))
         if not status:
             print("camera.setControl()", status)
@@ -31,31 +35,36 @@ class ADTF3175Camera (TOFCamera):
             print("camera.initialize() failed with status: ", status)
 
     def configure (self, configuration):
-        try:
-            status = self._camera.setMode(configuration['mode'])
-            if not status:
-                print("cameras[0].setMode() failed with status: ", status)
+        status = self._camera.setMode(configuration['mode'])
+        if not status:
+            print("cameras[0].setMode() failed with status: ", status)
+            raise SystemError()
 
-            status = self._camera.setFrameType(configuration['type']) # types[2] is 'mp_pcm' type.
-            if not status:
-                print("cameras[0].setFrameType() failed with status:", status)
-
-        except:
-            print("Failed")
+        status = self._camera.setFrameType(configuration['type']) # types[2] is 'mp_pcm' type.
+        if not status:
+            print("cameras[0].setFrameType() failed with status:", status)
+            raise SystemError()
 
     def start (self):
         status = self._camera.start()
         if not status:
             print("cameras[0].start() failed with status:", status)
-    
+            raise SystemError()
+
         camDetails = tof.CameraDetails()
         status = self._camera.getDetails(camDetails)
         if not status:
             print("system.getDetails() failed with status: ", status)
+            raise SystemError()
+
+        self.camDetails = camDetails
 
         # Enable noise reduction for better results
         smallSignalThreshold = 100
-        self._camera.setControl("noise_reduction_threshold", str(smallSignalThreshold))
+        status = self._camera.setControl("noise_reduction_threshold", str(smallSignalThreshold))
+        if not status:
+            print("system.setControl() failed with status: ", status)
+            raise SystemError()
 
         self.frame = tof.Frame()
 
@@ -66,12 +75,26 @@ class ADTF3175Camera (TOFCamera):
         status = self._camera.requestFrame(self.frame)
         if not status:
             print("cameras[0].requestFrame() failed with status: ", status)
-        return status, self.frame
+            raise SystemError("Failed requesting frame")
+        
+        frameDataDetails = tof.FrameDataDetails()
+        status = self.frame.getDataDetails("depth", frameDataDetails)
+            
+        self.imgWidth = frameDataDetails.width
+        self.imgHeight = frameDataDetails.height
 
+        f = Frame (
+            ir = np.array(self.frame.getData('ir'), dtype="uint16", copy=False),
+            depth = np.array(self.frame.getData('depth'), dtype="uint16", copy=False)
+        )
+        
+        return status, f
+        
     def get_bulk_frame (self):
         status = self._camera.requestFrame(self.frame)
         if not status:
             print("cameras[0].requestFrame() failed with status: ", status)
+            raise SystemError()
 
         ir_map = np.array(self.frame.getData('ir'), dtype="uint16", copy=False)
         depth_map = np.array(self.frame.getData('depth'), dtype="uint16", copy=False)

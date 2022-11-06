@@ -25,7 +25,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         if not MainWindow.objectName():
             MainWindow.setObjectName(u"MainWindow")
-        MainWindow.resize(970, 600)
+        MainWindow.resize(940, 600)
         MainWindow.setStyleSheet(u"*{\n"
 "	border: none;\n"
 "	background-color: transparent;\n"
@@ -50,13 +50,16 @@ class Ui_MainWindow(object):
 "	background-color: rgb(0, 120, 215)\n"
 "}\n"
 "\n"
-"#irframe{\n"
+"#basedisplayframe{\n"
 "	background-color: rgba(30, 30, 30,150);\n"
 "}\n"
 "\n"
-"#depthframe{\n"
+"#dnndisplayframe{\n"
 "	background-color: rgba(30, 30, 30,150);\n"
-"}")
+"}\n"
+"\n"
+"\n"
+"")
         self.centralwidget = QWidget(MainWindow)
         self.centralwidget.setObjectName(u"centralwidget")
         self.mainlayout = QVBoxLayout(self.centralwidget)
@@ -114,22 +117,21 @@ class Ui_MainWindow(object):
 
         self.horizontalLayout.addWidget(self.refreshbutton)
 
-        self.configbutton = QPushButton(self.controlsframe)
-        self.configbutton.setObjectName(u"configbutton")
-        self.configbutton.setStyleSheet(u"*{\n"
-"	padding: 10px;\n"
+        self.snapshotbutton = QPushButton(self.controlsframe)
+        self.snapshotbutton.setObjectName(u"snapshotbutton")
+        self.snapshotbutton.setStyleSheet(u"*{\n"
+"	padding:10px;\n"
 "}\n"
 "QPushButton:hover:!pressed\n"
 "{\n"
 "  border: 1px solid red;\n"
-"}\n"
-"")
+"}")
         icon1 = QIcon()
-        icon1.addFile(u":/resources/assets/icons/configure.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.configbutton.setIcon(icon1)
-        self.configbutton.setFlat(True)
+        icon1.addFile(u":/resources/assets/icons/capture.svg", QSize(), QIcon.Normal, QIcon.Off)
+        self.snapshotbutton.setIcon(icon1)
+        self.snapshotbutton.setFlat(True)
 
-        self.horizontalLayout.addWidget(self.configbutton)
+        self.horizontalLayout.addWidget(self.snapshotbutton)
 
         self.toggleplaybutton = QPushButton(self.controlsframe)
         self.toggleplaybutton.setObjectName(u"toggleplaybutton")
@@ -146,22 +148,6 @@ class Ui_MainWindow(object):
         self.toggleplaybutton.setFlat(True)
 
         self.horizontalLayout.addWidget(self.toggleplaybutton)
-
-        self.snapshotbutton = QPushButton(self.controlsframe)
-        self.snapshotbutton.setObjectName(u"snapshotbutton")
-        self.snapshotbutton.setStyleSheet(u"*{\n"
-"	padding:10px;\n"
-"}\n"
-"QPushButton:hover:!pressed\n"
-"{\n"
-"  border: 1px solid red;\n"
-"}")
-        icon3 = QIcon()
-        icon3.addFile(u":/resources/assets/icons/capture.svg", QSize(), QIcon.Normal, QIcon.Off)
-        self.snapshotbutton.setIcon(icon3)
-        self.snapshotbutton.setFlat(True)
-
-        self.horizontalLayout.addWidget(self.snapshotbutton)
 
         self.horizontalSpacer = QSpacerItem(40, 20, QSizePolicy.Expanding, QSizePolicy.Minimum)
 
@@ -212,7 +198,14 @@ class Ui_MainWindow(object):
         self.verticalLayout.setSpacing(0)
         self.verticalLayout.setObjectName(u"verticalLayout")
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
-        self.stackedWidget = QStackedWidget(self.panelsframe)
+        self.frame = QFrame(self.panelsframe)
+        self.frame.setObjectName(u"frame")
+        self.frame.setFrameShape(QFrame.StyledPanel)
+        self.frame.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_3 = QHBoxLayout(self.frame)
+        self.horizontalLayout_3.setObjectName(u"horizontalLayout_3")
+        self.horizontalLayout_3.setContentsMargins(0, 0, 0, 0)
+        self.stackedWidget = QStackedWidget(self.frame)
         self.stackedWidget.setObjectName(u"stackedWidget")
         self.basedisplaypage = QWidget()
         self.basedisplaypage.setObjectName(u"basedisplaypage")
@@ -225,7 +218,7 @@ class Ui_MainWindow(object):
         sizePolicy1.setVerticalStretch(0)
         sizePolicy1.setHeightForWidth(self.basesettingsframe.sizePolicy().hasHeightForWidth())
         self.basesettingsframe.setSizePolicy(sizePolicy1)
-        self.basesettingsframe.setMinimumSize(QSize(0, 70))
+        self.basesettingsframe.setMinimumSize(QSize(0, 100))
         self.basesettingsframe.setFrameShape(QFrame.StyledPanel)
         self.basesettingsframe.setFrameShadow(QFrame.Raised)
 
@@ -247,6 +240,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_3.setObjectName(u"verticalLayout_3")
         self.irpixmaplabel = QLabel(self.irframe)
         self.irpixmaplabel.setObjectName(u"irpixmaplabel")
+        self.irpixmaplabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_3.addWidget(self.irpixmaplabel)
 
@@ -261,6 +255,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_4.setObjectName(u"verticalLayout_4")
         self.depthpixmaplabel = QLabel(self.depthframe)
         self.depthpixmaplabel.setObjectName(u"depthpixmaplabel")
+        self.depthpixmaplabel.setAlignment(Qt.AlignCenter)
 
         self.verticalLayout_4.addWidget(self.depthpixmaplabel)
 
@@ -273,15 +268,176 @@ class Ui_MainWindow(object):
         self.stackedWidget.addWidget(self.basedisplaypage)
         self.dnnpage = QWidget()
         self.dnnpage.setObjectName(u"dnnpage")
+        self.verticalLayout_7 = QVBoxLayout(self.dnnpage)
+        self.verticalLayout_7.setObjectName(u"verticalLayout_7")
+        self.dnnsettingsframe = QFrame(self.dnnpage)
+        self.dnnsettingsframe.setObjectName(u"dnnsettingsframe")
+        self.dnnsettingsframe.setMinimumSize(QSize(0, 0))
+        self.dnnsettingsframe.setMaximumSize(QSize(16777215, 100))
+        self.dnnsettingsframe.setFrameShape(QFrame.StyledPanel)
+        self.dnnsettingsframe.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_7.addWidget(self.dnnsettingsframe)
+
+        self.dnndisplayframe = QFrame(self.dnnpage)
+        self.dnndisplayframe.setObjectName(u"dnndisplayframe")
+        self.dnndisplayframe.setFrameShape(QFrame.StyledPanel)
+        self.dnndisplayframe.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_4 = QHBoxLayout(self.dnndisplayframe)
+        self.horizontalLayout_4.setSpacing(0)
+        self.horizontalLayout_4.setObjectName(u"horizontalLayout_4")
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.dnnirframe = QFrame(self.dnndisplayframe)
+        self.dnnirframe.setObjectName(u"dnnirframe")
+        self.dnnirframe.setFrameShape(QFrame.StyledPanel)
+        self.dnnirframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_5 = QVBoxLayout(self.dnnirframe)
+        self.verticalLayout_5.setObjectName(u"verticalLayout_5")
+        self.dnnpixmaplabel = QLabel(self.dnnirframe)
+        self.dnnpixmaplabel.setObjectName(u"dnnpixmaplabel")
+        self.dnnpixmaplabel.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_5.addWidget(self.dnnpixmaplabel)
+
+
+        self.horizontalLayout_4.addWidget(self.dnnirframe)
+
+        self.dnndepthframe = QFrame(self.dnndisplayframe)
+        self.dnndepthframe.setObjectName(u"dnndepthframe")
+        self.dnndepthframe.setFrameShape(QFrame.StyledPanel)
+        self.dnndepthframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_6 = QVBoxLayout(self.dnndepthframe)
+        self.verticalLayout_6.setObjectName(u"verticalLayout_6")
+        self.dnndepthpixmaplabel = QLabel(self.dnndepthframe)
+        self.dnndepthpixmaplabel.setObjectName(u"dnndepthpixmaplabel")
+        self.dnndepthpixmaplabel.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_6.addWidget(self.dnndepthpixmaplabel)
+
+
+        self.horizontalLayout_4.addWidget(self.dnndepthframe)
+
+
+        self.verticalLayout_7.addWidget(self.dnndisplayframe)
+
         self.stackedWidget.addWidget(self.dnnpage)
         self.pointcloudpage = QWidget()
         self.pointcloudpage.setObjectName(u"pointcloudpage")
+        self.verticalLayout_10 = QVBoxLayout(self.pointcloudpage)
+        self.verticalLayout_10.setObjectName(u"verticalLayout_10")
+        self.pcdsettingsframe = QFrame(self.pointcloudpage)
+        self.pcdsettingsframe.setObjectName(u"pcdsettingsframe")
+        self.pcdsettingsframe.setMaximumSize(QSize(16777215, 100))
+        self.pcdsettingsframe.setFrameShape(QFrame.StyledPanel)
+        self.pcdsettingsframe.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_10.addWidget(self.pcdsettingsframe)
+
+        self.pcddisplayframe = QFrame(self.pointcloudpage)
+        self.pcddisplayframe.setObjectName(u"pcddisplayframe")
+        self.pcddisplayframe.setFrameShape(QFrame.StyledPanel)
+        self.pcddisplayframe.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_6 = QHBoxLayout(self.pcddisplayframe)
+        self.horizontalLayout_6.setObjectName(u"horizontalLayout_6")
+        self.pcddepthframe = QFrame(self.pcddisplayframe)
+        self.pcddepthframe.setObjectName(u"pcddepthframe")
+        self.pcddepthframe.setFrameShape(QFrame.StyledPanel)
+        self.pcddepthframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_12 = QVBoxLayout(self.pcddepthframe)
+        self.verticalLayout_12.setObjectName(u"verticalLayout_12")
+        self.pcddepthpixmaplabel = QLabel(self.pcddepthframe)
+        self.pcddepthpixmaplabel.setObjectName(u"pcddepthpixmaplabel")
+        self.pcddepthpixmaplabel.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_12.addWidget(self.pcddepthpixmaplabel)
+
+
+        self.horizontalLayout_6.addWidget(self.pcddepthframe)
+
+        self.pcdpointsframe = QFrame(self.pcddisplayframe)
+        self.pcdpointsframe.setObjectName(u"pcdpointsframe")
+        self.pcdpointsframe.setFrameShape(QFrame.StyledPanel)
+        self.pcdpointsframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_13 = QVBoxLayout(self.pcdpointsframe)
+        self.verticalLayout_13.setObjectName(u"verticalLayout_13")
+        self.pcdpointspixmaplabel = QLabel(self.pcdpointsframe)
+        self.pcdpointspixmaplabel.setObjectName(u"pcdpointspixmaplabel")
+        self.pcdpointspixmaplabel.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_13.addWidget(self.pcdpointspixmaplabel)
+
+
+        self.horizontalLayout_6.addWidget(self.pcdpointsframe)
+
+
+        self.verticalLayout_10.addWidget(self.pcddisplayframe)
+
         self.stackedWidget.addWidget(self.pointcloudpage)
         self.bodytrackingpage = QWidget()
         self.bodytrackingpage.setObjectName(u"bodytrackingpage")
+        self.verticalLayout_8 = QVBoxLayout(self.bodytrackingpage)
+        self.verticalLayout_8.setObjectName(u"verticalLayout_8")
+        self.frame_2 = QFrame(self.bodytrackingpage)
+        self.frame_2.setObjectName(u"frame_2")
+        self.frame_2.setMaximumSize(QSize(16777215, 100))
+        self.frame_2.setFrameShape(QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QFrame.Raised)
+
+        self.verticalLayout_8.addWidget(self.frame_2)
+
+        self.frame_3 = QFrame(self.bodytrackingpage)
+        self.frame_3.setObjectName(u"frame_3")
+        self.frame_3.setFrameShape(QFrame.StyledPanel)
+        self.frame_3.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_11 = QVBoxLayout(self.frame_3)
+        self.verticalLayout_11.setObjectName(u"verticalLayout_11")
+        self.bodytrackingdisplayframe = QFrame(self.frame_3)
+        self.bodytrackingdisplayframe.setObjectName(u"bodytrackingdisplayframe")
+        self.bodytrackingdisplayframe.setFrameShape(QFrame.StyledPanel)
+        self.bodytrackingdisplayframe.setFrameShadow(QFrame.Raised)
+        self.horizontalLayout_5 = QHBoxLayout(self.bodytrackingdisplayframe)
+        self.horizontalLayout_5.setSpacing(0)
+        self.horizontalLayout_5.setObjectName(u"horizontalLayout_5")
+        self.horizontalLayout_5.setContentsMargins(0, 0, 0, 0)
+        self.bodytrackingirframe = QFrame(self.bodytrackingdisplayframe)
+        self.bodytrackingirframe.setObjectName(u"bodytrackingirframe")
+        self.bodytrackingirframe.setFrameShape(QFrame.StyledPanel)
+        self.bodytrackingirframe.setFrameShadow(QFrame.Raised)
+        self.verticalLayout_9 = QVBoxLayout(self.bodytrackingirframe)
+        self.verticalLayout_9.setObjectName(u"verticalLayout_9")
+        self.bodytrackingirpixmaplabel = QLabel(self.bodytrackingirframe)
+        self.bodytrackingirpixmaplabel.setObjectName(u"bodytrackingirpixmaplabel")
+        self.bodytrackingirpixmaplabel.setAlignment(Qt.AlignCenter)
+
+        self.verticalLayout_9.addWidget(self.bodytrackingirpixmaplabel)
+
+
+        self.horizontalLayout_5.addWidget(self.bodytrackingirframe)
+
+
+        self.verticalLayout_11.addWidget(self.bodytrackingdisplayframe)
+
+
+        self.verticalLayout_8.addWidget(self.frame_3)
+
         self.stackedWidget.addWidget(self.bodytrackingpage)
 
-        self.verticalLayout.addWidget(self.stackedWidget)
+        self.horizontalLayout_3.addWidget(self.stackedWidget)
+
+        self.settingswidget = QWidget(self.frame)
+        self.settingswidget.setObjectName(u"settingswidget")
+        sizePolicy2 = QSizePolicy(QSizePolicy.Expanding, QSizePolicy.Preferred)
+        sizePolicy2.setHorizontalStretch(0)
+        sizePolicy2.setVerticalStretch(0)
+        sizePolicy2.setHeightForWidth(self.settingswidget.sizePolicy().hasHeightForWidth())
+        self.settingswidget.setSizePolicy(sizePolicy2)
+        self.settingswidget.setMaximumSize(QSize(200, 16777215))
+        self.settingswidget.setStyleSheet(u"background-color:black")
+
+        self.horizontalLayout_3.addWidget(self.settingswidget)
+
+
+        self.verticalLayout.addWidget(self.frame)
 
 
         self.midframeLayout.addWidget(self.panelsframe)
@@ -291,12 +447,12 @@ class Ui_MainWindow(object):
 
         self.statusframe = QFrame(self.centralwidget)
         self.statusframe.setObjectName(u"statusframe")
-        sizePolicy2 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
-        sizePolicy2.setHorizontalStretch(0)
-        sizePolicy2.setVerticalStretch(0)
-        sizePolicy2.setHeightForWidth(self.statusframe.sizePolicy().hasHeightForWidth())
-        self.statusframe.setSizePolicy(sizePolicy2)
-        self.statusframe.setMinimumSize(QSize(0, 20))
+        sizePolicy3 = QSizePolicy(QSizePolicy.Preferred, QSizePolicy.Preferred)
+        sizePolicy3.setHorizontalStretch(0)
+        sizePolicy3.setVerticalStretch(0)
+        sizePolicy3.setHeightForWidth(self.statusframe.sizePolicy().hasHeightForWidth())
+        self.statusframe.setSizePolicy(sizePolicy3)
+        self.statusframe.setMinimumSize(QSize(0, 25))
         self.statusframe.setFrameShape(QFrame.StyledPanel)
         self.statusframe.setFrameShadow(QFrame.Raised)
 
@@ -306,7 +462,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
 
-        self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget.setCurrentIndex(2)
 
 
         QMetaObject.connectSlotsByName(MainWindow)
@@ -320,9 +476,8 @@ class Ui_MainWindow(object):
 #if QT_CONFIG(shortcut)
         self.refreshbutton.setShortcut(QCoreApplication.translate("MainWindow", u"Ctrl+S", None))
 #endif // QT_CONFIG(shortcut)
-        self.configbutton.setText(QCoreApplication.translate("MainWindow", u"CONFIGURE", None))
-        self.toggleplaybutton.setText(QCoreApplication.translate("MainWindow", u"PLAY", None))
         self.snapshotbutton.setText(QCoreApplication.translate("MainWindow", u"CAPTURE", None))
+        self.toggleplaybutton.setText(QCoreApplication.translate("MainWindow", u"PLAY", None))
 
         __sortingEnabled = self.listWidget.isSortingEnabled()
         self.listWidget.setSortingEnabled(False)
@@ -338,5 +493,10 @@ class Ui_MainWindow(object):
 
         self.irpixmaplabel.setText("")
         self.depthpixmaplabel.setText("")
+        self.dnnpixmaplabel.setText("")
+        self.dnndepthpixmaplabel.setText("")
+        self.pcddepthpixmaplabel.setText("")
+        self.pcdpointspixmaplabel.setText("")
+        self.bodytrackingirpixmaplabel.setText("")
     # retranslateUi
 

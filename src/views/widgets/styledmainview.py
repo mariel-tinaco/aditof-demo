@@ -12,13 +12,13 @@ class MainWindow (QtWidgets.QMainWindow, Ui_MainWindow):
     signalConfigure = QtCore.Signal()
     signalPlay = QtCore.Signal()
     signalPause = QtCore.Signal()
+    signalCapture = QtCore.Signal()
 
     def __init__ (self, parent=None):
         super(MainWindow, self).__init__(parent=parent)
 
         self.closeButton = QtWidgets.QPushButton(' ✕ ')
         self.closeButton.setEnabled(True)
-
 
         self.setupUi()
         self.__connect_signals()
@@ -34,7 +34,7 @@ class MainWindow (QtWidgets.QMainWindow, Ui_MainWindow):
 
         topframeheight = int(self.height()/8)
         self.topframe.setFixedHeight(topframeheight)
-        self.statusframe.setFixedHeight(int(self.height()/20))
+        # self.statusframe.setFixedHeight(20)
         
         leftpanelwidth = int(self.width()/7)
         rightpanelwidth = int(self.width()/7)
@@ -43,11 +43,13 @@ class MainWindow (QtWidgets.QMainWindow, Ui_MainWindow):
         self.logoframe.setFixedWidth(leftpanelwidth)
         self.utilsframe.setFixedWidth(rightpanelwidth)
 
-
     def __connect_signals (self):
         self.refreshbutton.clicked.connect(lambda : self.signalRefresh.emit())
-        self.configbutton.clicked.connect(lambda : self.signalConfigure.emit())
+        # self.configbutton.clicked.connect(lambda : self.signalConfigure.emit())
         self.toggleplaybutton.clicked.connect(self.toggleStream)
+        self.snapshotbutton.clicked.connect(lambda : self.signalCapture.emit())
+
+        self.listWidget.currentRowChanged.connect(self.switch_panel)
 
 
     def toggleStream (self):
@@ -63,13 +65,21 @@ class MainWindow (QtWidgets.QMainWindow, Ui_MainWindow):
         self.adjustToScreen()
         self.toggleplaybutton.setCheckable(True)
 
-
     def setCameraOptions(self, camoptions):
         self.cameracombobox.clear()
         self.cameracombobox.addItems(camoptions)
 
     def setupStateMachine (self):
         ...
+
+    @QtCore.Slot(str)
+    def log (self, text):
+        # self.logtextedit.insertPlainText(text)
+        print(text)
+        
+    def switch_panel (self):
+        index = self.listWidget.currentRow()
+        self.stackedWidget.setCurrentIndex(index)
 
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
